@@ -329,8 +329,7 @@ function displayProductsTable() {
                            class="keywords-input" 
                            data-index="${index}"
                            placeholder="np. zestaw, narzędziowy, 72t"
-                           value="${escapeHtml(product.customKeywords || '')}"
-                           onchange="updateProductKeywords(${index}, this.value)">
+                           value="${escapeHtml(product.customKeywords || '')}">
                     <button class="btn-upload-keywords" 
                             onclick="openKeywordsImageUpload(${index})"
                             title="Wczytaj słowa kluczowe ze screenu">
@@ -398,7 +397,26 @@ function updateSelectedCount() {
 }
 
 // ===== GENERATION =====
+// Dodaj do app.js przed startGeneration
+
+// ===== COLLECT KEYWORDS BEFORE GENERATION =====
+function collectAllKeywords() {
+    // Zbierz wszystkie keywords z input fields przed generowaniem
+    const inputs = document.querySelectorAll('.keywords-input');
+    inputs.forEach(input => {
+        const index = parseInt(input.dataset.index);
+        const keywords = input.value.trim();
+        if (productsData[index] && keywords) {
+            productsData[index].customKeywords = keywords;
+            console.log(`📝 Collected keywords for ${productsData[index].indeks}: ${keywords}`);
+        }
+    });
+    console.log('✅ All keywords collected from inputs');
+}
 async function startGeneration() {
+    // Zbierz wszystkie keywords z input fields PRZED generowaniem
+    collectAllKeywords();
+    
     if (selectedProducts.size === 0) {
         alert('Proszę wybrać przynajmniej jeden produkt do generowania opisów');
         return;
