@@ -600,16 +600,6 @@ Wymiary: ${product['Długość'] || ''}x${product['Wysokość'] || ''}x${product
 Kolor: ${product['Kolor'] || ''}
 Gwarancja: ${product['Gwarancja'] || ''}`.trim();
     
-    // Dodaj własne słowa kluczowe użytkownika (jeśli są)
-    if (product.customKeywords && product.customKeywords.trim()) {
-        context += `
-
-🔑 KLUCZOWE SŁOWA UŻYTKOWNIKA (PRIORYTET!):
-${product.customKeywords}
-
-⚠️ WAŻNE: Te słowa kluczowe MUSZĄ pojawić się w opisach (szczególnie w metaTitle, metaDescription i longDescription)!`;
-    }
-    
     return context;
 }
 
