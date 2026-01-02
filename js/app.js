@@ -311,6 +311,13 @@ function displayProductsTable() {
     tbody.innerHTML = '';
     
     // DEBUG: Wyświetl wszystkie klucze pierwszego produktu
+        // DEBUG: Wyświetl wszystkie klucze pierwszego produktu
+        if (index === 0) {
+            console.log('🔍 DEBUG - Klucze w obiekcie product:', Object.keys(product));
+            console.log('🔍 DEBUG - Wartość product.ean:', product.ean);
+            console.log('🔍 DEBUG - Wartość product.Ean:', product.Ean);
+            console.log('🔍 DEBUG - Wartość product.EAN:', product.EAN);
+        }
     if (productsData.length > 0) {
         console.log("🔍 DEBUG - Klucze pierwszego produktu:", Object.keys(productsData[0]));
         console.log("🔍 DEBUG - EAN wartości:", {
