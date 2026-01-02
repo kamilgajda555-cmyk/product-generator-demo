@@ -12,12 +12,11 @@ let API_KEY = null;  // Zostanie załadowany z window.appConfig.getApiKey()
 
 // ===== KONFIGURACJA WERYFIKACJI EAN =====
 const EAN_VERIFICATION_CONFIG = {
-    enabled: true,               // ✅ WŁĄCZONE - Allegro scraping
+    enabled: false,              // Wyłącz jeśli CORS blokuje (localhost)
     enabledAPIs: {
-        allegro: true,           // ✅ PRIORYTET 1: Allegro scraping (najlepsze dla narzędzi/sprzętu)
-        openFoodFacts: false,    // Fallback dla żywności (rzadko używane)
-        barcodeLookup: false,    // Wyłączony (wymaga API key)
-        eanSearch: false         // Wyłączony (wymaga rejestracji)
+        openFoodFacts: false,    // Zazwyczaj działa (bez CORS)
+        barcodeLookup: false,    // CORS problem (wyłącz dla localhost)
+        eanSearch: false         // 401 Unauthorized (wymagana rejestracja)
     },
     skipIfEmpty: true            // Pomiń jeśli EAN pusty lub nieprawidłowy
 };
@@ -655,39 +654,14 @@ async function callGeminiAPI(prompt, language, style, productData = {}, keywordD
     }
     
     let verifiedData = null;
-    const productName = productData.nazwa || productData.name || '';
-    
-    // Weryfikuj jeśli masz EAN LUB nazwę produktu
-    if ((ean && ean.length >= 8) || productName) {
-        console.log(`🔍 Weryfikacja produktu: EAN=${ean}, SKU=${sku}, Nazwa=${productName}`);
-        verifiedData = await verifyProductByEAN(ean, sku, productName);
+    if (ean && ean.length >= 8) { // Tylko jeśli EAN ma min. 8 cyfr
+        console.log(`🔍 Weryfikacja produktu: EAN=${ean}, SKU=${sku}`);
+        verifiedData = await verifyProductByEAN(ean, sku);
         
         if (verifiedData) {
             console.log(`✅ Znaleziono dane w bazie ${verifiedData.source}`);
             // Wzbogać context o zweryfikowane dane
-            let verifiedContext = `\n\nZWERYFIKOWANE DANE ONLINE (źródło: ${verifiedData.source}):\nNazwa: ${verifiedData.name || 'N/A'}\nMarka: ${verifiedData.brand || 'N/A'}\nKategoria: ${verifiedData.category || verifiedData.categories || 'N/A'}`;
-            
-            // Dodaj opis
-            if (verifiedData.description) {
-                verifiedContext += `\nOpis producenta: ${verifiedData.description}`;
-            }
-            
-            // Dodaj słowa kluczowe z Allegro (jeśli dostępne)
-            if (verifiedData.keywords) {
-                verifiedContext += `\n\nTOP SŁOWA KLUCZOWE Z ALLEGRO (użyj w opisie!):\n${verifiedData.keywords}`;
-            }
-            
-            // Dodaj cenę (opcjonalnie, do kontekstu)
-            if (verifiedData.price) {
-                verifiedContext += `\nZakres cenowy na Allegro: ${verifiedData.price}`;
-            }
-            
-            // Dodaj liczbę ofert (pokazuje popularność)
-            if (verifiedData.offersCount) {
-                verifiedContext += `\nLiczba ofert na Allegro: ${verifiedData.offersCount} (popularny produkt!)`;
-            }
-            
-            context += verifiedContext;
+            context += `\n\nZWERYFIKOWANE DANE ONLINE:\nNazwa: ${verifiedData.name || 'N/A'}\nMarka: ${verifiedData.brand || 'N/A'}\nKategoria: ${verifiedData.category || verifiedData.categories || 'N/A'}\nOpis producenta: ${verifiedData.description || 'N/A'}`;
         }
     }
     
@@ -1751,90 +1725,29 @@ function exportToCSV() {
 }
 
 // ===== EAN/SKU VERIFICATION =====
-async function verifyProductByEAN(ean, sku, productName = '') {
+async function verifyProductByEAN(ean, sku) {
     // Sprawdź, czy weryfikacja włączona
     if (!EAN_VERIFICATION_CONFIG.enabled) {
         console.log('ℹ️ Weryfikacja EAN wyłączona (konfiguracja)');
         return null;
     }
     
-    if (!ean && !sku && !productName) return null;
+    if (!ean && !sku) return null;
     
     // Walidacja EAN
     if (ean && !/^\d{8,14}$/.test(ean.trim())) {
-        console.warn(`⚠️ EAN nieprawidłowy: ${ean} - używam tylko nazwy`);
-        ean = ''; // Wyzeruj nieprawidłowy EAN
+        if (EAN_VERIFICATION_CONFIG.skipIfEmpty) {
+            console.log('ℹ️ EAN nieprawidłowy, pomijam weryfikację');
+            return null;
+        }
     }
     
-    console.log(`🔍 Weryfikacja produktu: EAN=${ean}, SKU=${sku}, Nazwa=${productName}`);
+    console.log(`🔍 Weryfikacja produktu: EAN=${ean}, SKU=${sku}`);
     
     try {
-        // ===== PRIORYTET 1: ALLEGRO SCRAPING =====
-        // Najlepsze źródło dla narzędzi, sprzętu, elektroniki
-        console.log('🛒 Próbuję Allegro scraping...');
-        
-        if (window.allegroScraper) {
+        // Próba 1: OpenFoodFacts (dla produktów spożywczych) - NIE MA CORS!
+        if (ean) {
             try {
-                // Użyj crawler tool do pobrania strony Allegro
-                const searchQuery = ean || productName || sku;
-                const searchUrl = `https://allegro.pl/listing?string=${encodeURIComponent(searchQuery)}`;
-                
-                console.log(`📡 Pobieram stronę Allegro: ${searchUrl}`);
-                
-                // UWAGA: Musimy użyć zewnętrznego API do obejścia CORS i anti-bot
-                // Użyjemy prostego fetch najpierw (może zadziałać dla demo)
-                // W produkcji należy użyć crawler tool lub proxy
-                
-                const response = await fetch(searchUrl, {
-                    method: 'GET',
-                    headers: {
-                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-                        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
-                    }
-                }).catch(err => {
-                    console.warn('⚠️ Fetch Allegro zablokowany (CORS):', err.message);
-                    return null;
-                });
-                
-                if (response && response.ok) {
-                    const html = await response.text();
-                    
-                    // Parsuj wyniki przez AllegroScraper
-                    const offers = window.allegroScraper.parseAllegroSearch(html, ean, productName);
-                    
-                    if (offers && offers.length > 0) {
-                        const allegroData = window.allegroScraper.buildProductData(offers, ean, productName);
-                        
-                        if (allegroData) {
-                            console.log('✅ Znaleziono dane na Allegro:', allegroData.name.substring(0, 60) + '...');
-                            
-                            // Format zgodny z resztą kodu
-                            return {
-                                source: 'Allegro',
-                                name: allegroData.name,
-                                brand: allegroData.brand,
-                                category: allegroData.category,
-                                description: allegroData.descriptions.join(' | '),
-                                price: allegroData.price,
-                                keywords: allegroData.keywords.slice(0, 10).join(', '),
-                                offersCount: allegroData.offersCount,
-                                url: allegroData.url
-                            };
-                        }
-                    }
-                }
-                
-            } catch (error) {
-                console.warn('⚠️ Allegro scraping error:', error.message);
-            }
-        } else {
-            console.warn('⚠️ AllegroScraper nie załadowany');
-        }
-        
-        // ===== FALLBACK 2: OpenFoodFacts (tylko dla żywności) =====
-        if (ean && EAN_VERIFICATION_CONFIG.enabledAPIs?.openFoodFacts) {
-            try {
-                console.log('🥫 Próbuję OpenFoodFacts...');
                 const openFoodResponse = await fetch(`https://world.openfoodfacts.org/api/v0/product/${ean}.json`, {
                     mode: 'cors',
                     headers: {
@@ -1850,7 +1763,7 @@ async function verifyProductByEAN(ean, sku, productName = '') {
                             source: 'OpenFoodFacts',
                             name: data.product.product_name || data.product.product_name_pl,
                             brand: data.product.brands,
-                            category: data.product.categories,
+                            categories: data.product.categories,
                             description: data.product.generic_name || data.product.generic_name_pl
                         };
                     }
@@ -1860,14 +1773,70 @@ async function verifyProductByEAN(ean, sku, productName = '') {
             }
         }
         
-        console.log('⚠️ Nie znaleziono produktu w żadnej bazie');
+        // Próba 2: Barcodelookup.com (wymaga API key, ale ma wersję trial)
+        if (ean) {
+            try {
+                // Ta wersja endpoint działa bez klucza dla trial
+                const barcodeResponse = await fetch(`https://api.barcodelookup.com/v3/products?barcode=${ean}&formatted=y&key=trial`, {
+                    mode: 'cors'
+                });
+                
+                if (barcodeResponse.ok) {
+                    const data = await barcodeResponse.json();
+                    if (data.products && data.products.length > 0) {
+                        console.log('✅ Znaleziono w BarcodeLookup');
+                        const product = data.products[0];
+                        return {
+                            source: 'BarcodeLookup',
+                            name: product.title || product.product_name,
+                            brand: product.brand || product.manufacturer,
+                            category: product.category,
+                            description: product.description
+                        };
+                    }
+                }
+            } catch (error) {
+                console.warn('⚠️ BarcodeLookup niedostępny:', error.message);
+            }
+        }
+        
+        // Próba 3: EAN-Search.org (publiczne API bez CORS)
+        if (ean) {
+            try {
+                const eanSearchResponse = await fetch(`https://api.ean-search.org/api?token=free&op=barcode-lookup&format=json&ean=${ean}`, {
+                    mode: 'cors'
+                });
+                
+                if (eanSearchResponse.ok) {
+                    const data = await eanSearchResponse.json();
+                    if (data && data.productname) {
+                        console.log('✅ Znaleziono w EAN-Search');
+                        return {
+                            source: 'EAN-Search',
+                            name: data.productname,
+                            brand: data.vendor,
+                            category: data.categoryname,
+                            description: data.description || `${data.productname} by ${data.vendor}`
+                        };
+                    }
+                }
+            } catch (error) {
+                console.warn('⚠️ EAN-Search niedostępny:', error.message);
+            }
+        }
+        
+        console.log('⚠️ Produkt nie znaleziony w żadnej bazie online (to nie błąd, kontynuuję bez weryfikacji)');
         return null;
         
     } catch (error) {
-        console.error('❌ Błąd podczas weryfikacji produktu:', error);
+        console.warn('⚠️ Błąd weryfikacji EAN/SKU:', error.message);
         return null;
     }
 }
+
+// ===== UNIQUE CONTENT GENERATOR =====
+const generatedContents = new Map(); // Przechowuje wygenerowane treści dla unikałności
+
 function generateUniqueHash(content) {
     // Prosty hash dla porównywania podobieństwa
     return content.toLowerCase().replace(/\s+/g, ' ').trim();
