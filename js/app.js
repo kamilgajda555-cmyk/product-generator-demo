@@ -310,6 +310,15 @@ function displayProductsTable() {
     const tbody = document.getElementById('products-table-body');
     tbody.innerHTML = '';
     
+    // DEBUG: Wyświetl wszystkie klucze pierwszego produktu
+    if (productsData.length > 0) {
+        console.log("🔍 DEBUG - Klucze pierwszego produktu:", Object.keys(productsData[0]));
+        console.log("🔍 DEBUG - EAN wartości:", {
+            "Ean": productsData[0].Ean,
+            "ean": productsData[0].ean,
+            "EAN": productsData[0].EAN
+        });
+    }
     productsData.forEach((product, index) => {
         const row = document.createElement('tr');
         row.innerHTML = `
@@ -322,7 +331,7 @@ function displayProductsTable() {
             <td>${escapeHtml(product.indeks || '-')}</td>
             <td>${escapeHtml(product.kategoria || '-')}</td>
             <td>${escapeHtml(product.nazwa || '-')}</td>
-            <td>${escapeHtml(product.Ean || '-')}</td>
+            <td>${escapeHtml(product.Ean || product.ean || product.EAN || '-')}</td>
             <td class="keywords-cell">
                 <div class="keywords-wrapper">
                     <input type="text" 
@@ -610,7 +619,7 @@ function buildProductContext(product) {
     let context = `Produkt: ${product.nazwa || ''}
 SKU: ${product.indeks || ''}
 Kategoria: ${product.kategoria || ''} ${product['podkategoria 1'] || ''}
-EAN: ${product.Ean || ''}
+EAN: ${product.Ean || product.ean || product.EAN || ''}
 Opis: ${product.opis || ''}
 Dodatkowy opis: ${product['dodatkowy opis'] || ''}
 Material: ${product['Materiał'] || ''}
