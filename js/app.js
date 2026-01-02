@@ -2929,3 +2929,24 @@ function fileToBase64(file) {
 }
 
 console.log('✅ Custom Keywords Feature loaded');
+
+// ===== SETTINGS MODAL =====
+function openSettingsModal() {
+    const modal = document.getElementById('api-key-modal');
+    if (modal) {
+        modal.style.display = 'flex';
+        console.log('✅ Settings modal opened');
+    } else {
+        console.error('❌ Modal #api-key-modal not found!');
+    }
+}
+
+// Zamknij modal przy kliknięciu poza nim
+window.onclick = function(event) {
+    const modal = document.getElementById('api-key-modal');
+    if (event.target === modal) {
+        modal.style.display = 'none';
+    }
+}
+
+console.log('✅ Settings button handler loaded');
