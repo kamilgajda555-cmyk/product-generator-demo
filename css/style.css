@@ -937,3 +937,32 @@ body {
         justify-content: center;
     }
 }
+
+/* ===== MODAL CLOSE BUTTON ===== */
+.modal-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: transparent;
+    border: none;
+    font-size: 24px;
+    color: #6b7280;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.modal-close:hover {
+    background: #f3f4f6;
+    color: #ef4444;
+    transform: rotate(90deg);
+}
+
+.modal-content {
+    position: relative;
+}

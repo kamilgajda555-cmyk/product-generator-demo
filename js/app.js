@@ -2950,3 +2950,33 @@ window.onclick = function(event) {
 }
 
 console.log('✅ Settings button handler loaded');
+// Dodaj na końcu app.js
+
+// ===== FIX: Universal modal close =====
+function closeApiKeyModal() {
+    const modal = document.getElementById('api-key-modal');
+    if (modal) {
+        modal.style.display = 'none';
+        console.log('✅ Modal closed');
+    }
+}
+
+// Dodaj listener do przycisku zapisz (backup)
+document.addEventListener('DOMContentLoaded', function() {
+    const saveBtn = document.getElementById('save-api-key');
+    if (saveBtn) {
+        // Dodaj dodatkowy listener jako backup
+        saveBtn.addEventListener('click', function(e) {
+            const input = document.getElementById('api-key-input');
+            const key = input?.value?.trim();
+            
+            if (key && key.startsWith('AIza')) {
+                // Zamknij modal po 500ms (daj czas na zapis)
+                setTimeout(() => {
+                    closeApiKeyModal();
+                }, 500);
+            }
+        });
+        console.log('✅ Modal close handler attached');
+    }
+});
