@@ -310,7 +310,7 @@ function displayProductsTable() {
     const tbody = document.getElementById('products-table-body');
     tbody.innerHTML = '';
     
-    // DEBUG: Wyświetl wszystkie klucze pierwszego produktu
+    productsData.forEach((product, index) => {
         // DEBUG: Wyświetl wszystkie klucze pierwszego produktu
         if (index === 0) {
             console.log('🔍 DEBUG - Klucze w obiekcie product:', Object.keys(product));
@@ -318,15 +318,6 @@ function displayProductsTable() {
             console.log('🔍 DEBUG - Wartość product.Ean:', product.Ean);
             console.log('🔍 DEBUG - Wartość product.EAN:', product.EAN);
         }
-    if (productsData.length > 0) {
-        console.log("🔍 DEBUG - Klucze pierwszego produktu:", Object.keys(productsData[0]));
-        console.log("🔍 DEBUG - EAN wartości:", {
-            "Ean": productsData[0].Ean,
-            "ean": productsData[0].ean,
-            "EAN": productsData[0].EAN
-        });
-    }
-    productsData.forEach((product, index) => {
         const row = document.createElement('tr');
         row.innerHTML = `
             <td class="checkbox-col">
