@@ -2872,11 +2872,34 @@ async function processKeywordsImage(file, productIndex) {
     try {
         // Convert image to base64
         const base64 = await fileToBase64(file);
+        
         // Użyj Gemini do OCR i ekstrakcji keywords
-        const apiKey = await getGeminiApiKey();
+        let apiKey = null;
+        
+        // Pobierz API key z Config (async)
+        if (window.appConfig && typeof window.appConfig.getApiKey === 'function') {
+            try {
+                apiKey = await window.appConfig.getApiKey();
+            } catch (error) {
+                console.error('❌ Błąd pobierania API key:', error);
+            }
+        }
+        
+        // Fallback: sprawdź localStorage bezpośrednio
+        if (!apiKey) {
+            const stored = localStorage.getItem('gemini_api_key_encrypted');
+            if (stored) {
+                // Prosta deszyfrowacja (base64)
+                try {
+                    apiKey = atob(stored);
+                } catch (e) {
+                    apiKey = stored; // Jeśli nie base64, użyj raw
+                }
+            }
+        }
         
         if (!apiKey) {
-            alert("⚠️ Brak Gemini API Key. Przejdź do Ustawień i dodaj klucz.");
+            alert('⚠️ Brak Gemini API Key. Przejdź do Ustawień i dodaj klucz.');
             statusEl.innerHTML = originalStatus;
             return;
         }
