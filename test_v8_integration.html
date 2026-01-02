@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test V8.0 Integration</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f7fa;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .success { color: #22c55e; font-weight: 600; }
+        .error { color: #ef4444; font-weight: 600; }
+        .info { color: #3b82f6; }
+        pre {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 12px;
+        }
+        button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        button:hover { background: #2563eb; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Product Generator V8.0 ULTIMATE - Test Integracji</h1>
+    
+    <div class="test-section">
+        <h2>1. Test Ładowania Modułów</h2>
+        <div id="module-test"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>2. Test OptimizedPromptGenerator</h2>
+        <button onclick="testPromptGenerator()">Uruchom Test</button>
+        <div id="prompt-test" style="margin-top: 15px;"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>3. Test Config Manager</h2>
+        <button onclick="testConfigManager()">Uruchom Test</button>
+        <div id="config-test" style="margin-top: 15px;"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>4. Test AutoSave</h2>
+        <button onclick="testAutoSave()">Uruchom Test</button>
+        <div id="autosave-test" style="margin-top: 15px;"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>5. Test TextUtils (V8.1 FIX)</h2>
+        <button onclick="testTextUtils()">Uruchom Test</button>
+        <div id="textutils-test" style="margin-top: 15px;"></div>
+    </div>
+
+    <!-- Load all required scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    
+    <!-- V7 Modules -->
+    <script src="js/validator.js"></script>
+    <script src="js/ecommerceRules.js"></script>
+    <script src="js/keywordAnalyzer.js"></script>
+    
+    <!-- V8 New Modules -->
+    <script src="js/config.js"></script>
+    <script src="js/optimizedPromptGenerator.js"></script>
+    <script src="js/textUtils.js"></script>
+    <script src="js/autoSave.js"></script>
+    <script src="js/progressTracker.js"></script>
+    <script src="js/notifications.js"></script>
+    <script src="js/testTextUtils.js"></script>
+
+    <script>
+        // Test 1: Module Loading
+        function testModuleLoading() {
+            const output = document.getElementById('module-test');
+            let html = '<h3>Status Modułów:</h3>';
+            
+            const modules = [
+                { name: 'Papa Parse', check: () => typeof Papa !== 'undefined' },
+                { name: 'XLSX', check: () => typeof XLSX !== 'undefined' },
+                { name: 'ConfigManager', check: () => typeof ConfigManager !== 'undefined' },
+                { name: 'OptimizedPromptGenerator', check: () => typeof OptimizedPromptGenerator !== 'undefined' },
+                { name: 'TextUtils', check: () => typeof TextUtils !== 'undefined' },
+                { name: 'AutoSave', check: () => typeof AutoSave !== 'undefined' },
+                { name: 'ProgressTracker', check: () => typeof ProgressTracker !== 'undefined' },
+                { name: 'NotificationSystem', check: () => typeof NotificationSystem !== 'undefined' }
+            ];
+            
+            modules.forEach(module => {
+                const status = module.check();
+                html += `<div style="padding: 8px 0;">
+                    ${status ? '✅' : '❌'} <strong>${module.name}</strong>: 
+                    <span class="${status ? 'success' : 'error'}">${status ? 'Loaded' : 'NOT LOADED'}</span>
+                </div>`;
+            });
+            
+            output.innerHTML = html;
+        }
+        
+        // Test 2: OptimizedPromptGenerator
+        function testPromptGenerator() {
+            const output = document.getElementById('prompt-test');
+            try {
+                const generator = new OptimizedPromptGenerator();
+                
+                const testProduct = {
+                    nazwa: 'Miernik napięcia cyfrowy',
+                    kategoria: 'Elektronarzędzia',
+                    indeks: 'TEST-001',
+                    Ean: '5901234567890',
+                    opis: 'Profesjonalny miernik do pomiaru napięcia AC/DC',
+                    'Materiał': 'Plastik ABS, obudowa gumowa',
+                    'Długość': '150',
+                    'Wysokość': '75',
+                    'Szerokość': '30'
+                };
+                
+                const prompt = generator.generatePrompt(testProduct, 'pl', 'professional', null);
+                
+                output.innerHTML = `
+                    <div class="success">✅ Generator działa poprawnie!</div>
+                    <div class="info">Długość promptu: <strong>${prompt.length}</strong> znaków</div>
+                    <div class="info">Cel: <strong>~7500 znaków</strong> (-35% vs V7.0.6)</div>
+                    <h4>Fragment promptu:</h4>
+                    <pre>${prompt.substring(0, 800)}...</pre>
+                `;
+            } catch (error) {
+                output.innerHTML = `<div class="error">❌ Błąd: ${error.message}</div>`;
+            }
+        }
+        
+        // Test 3: ConfigManager
+        function testConfigManager() {
+            const output = document.getElementById('config-test');
+            try {
+                const config = new ConfigManager();
+                
+                // Test set/get
+                config.set('testKey', 'testValue');
+                const value = config.get('testKey');
+                
+                // Test API key (mock)
+                config.set('geminiApiKey', 'test_api_key_mock_12345678');
+                const apiKey = config.getApiKey();
+                
+                output.innerHTML = `
+                    <div class="success">✅ ConfigManager działa!</div>
+                    <div class="info">Test get/set: ${value === 'testValue' ? '✅ Passed' : '❌ Failed'}</div>
+                    <div class="info">API Key handling: ${apiKey ? '✅ OK' : '❌ Failed'}</div>
+                    <h4>Saved Settings:</h4>
+                    <pre>${JSON.stringify(config.getAll(), null, 2)}</pre>
+                `;
+            } catch (error) {
+                output.innerHTML = `<div class="error">❌ Błąd: ${error.message}</div>`;
+            }
+        }
+        
+        // Test 4: AutoSave
+        function testAutoSave() {
+            const output = document.getElementById('autosave-test');
+            try {
+                const autoSave = new AutoSave({
+                    interval: 5000,
+                    storageKey: 'test_autosave'
+                });
+                
+                const testData = {
+                    products: ['Product 1', 'Product 2'],
+                    timestamp: Date.now()
+                };
+                
+                autoSave.saveData(testData);
+                const restored = autoSave.restoreData();
+                
+                output.innerHTML = `
+                    <div class="success">✅ AutoSave działa!</div>
+                    <div class="info">Save test: ${restored !== null ? '✅ Passed' : '❌ Failed'}</div>
+                    <h4>Saved Data:</h4>
+                    <pre>${JSON.stringify(restored, null, 2)}</pre>
+                `;
+            } catch (error) {
+                output.innerHTML = `<div class="error">❌ Błąd: ${error.message}</div>`;
+            }
+        }
+        
+        // Auto-run module test on load
+        window.addEventListener('DOMContentLoaded', () => {
+            console.log('🧪 Uruchamiam test integracji V8.0...');
+            testModuleLoading();
+        });
+    </script>
+</body>
+</html>

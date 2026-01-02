@@ -1,0 +1,456 @@
+/**
+ * Mobile Responsive Styles
+ * Optymalizacja dla urządzeń mobilnych i tabletów
+ */
+
+/* ============================================================================
+   TABLET (iPad, Android Tablet) - max-width: 1024px
+   ============================================================================ */
+
+@media (max-width: 1024px) {
+    .container {
+        padding: 15px;
+    }
+    
+    .header-content {
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+    
+    .header-info {
+        flex-wrap: wrap;
+    }
+    
+    .info-badge {
+        font-size: 13px;
+        padding: 6px 12px;
+    }
+}
+
+/* ============================================================================
+   MOBILE (większe smartfony) - max-width: 768px
+   ============================================================================ */
+
+@media (max-width: 768px) {
+    /* Header */
+    .header {
+        padding: 15px 0;
+    }
+    
+    .header-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    
+    .logo-section {
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .company-logo-img {
+        height: 40px !important;
+    }
+    
+    .product-title h1 {
+        font-size: 18px;
+    }
+    
+    .header-info {
+        width: 100%;
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .info-badge {
+        width: 100%;
+        justify-content: center;
+        font-size: 12px;
+    }
+    
+    .tagline {
+        font-size: 12px;
+        flex-direction: column;
+        text-align: center;
+        gap: 8px;
+    }
+    
+    .tagline-separator {
+        display: none;
+    }
+    
+    /* Container */
+    .container {
+        padding: 10px;
+    }
+    
+    /* Cards */
+    .card {
+        margin: 10px 0;
+        padding: 15px;
+        border-radius: 8px;
+    }
+    
+    .card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    
+    .card-header h2 {
+        font-size: 16px;
+    }
+    
+    .card-header i {
+        font-size: 18px;
+    }
+    
+    /* Buttons */
+    .btn {
+        width: 100%;
+        margin: 5px 0;
+        padding: 12px 16px;
+        font-size: 14px;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .btn-group {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .btn-group .btn {
+        border-radius: 5px !important;
+        margin: 4px 0;
+    }
+    
+    /* Upload area */
+    .upload-area {
+        padding: 30px 15px;
+    }
+    
+    .upload-area i {
+        font-size: 36px;
+    }
+    
+    .upload-area p {
+        font-size: 13px;
+    }
+    
+    /* Table */
+    .products-table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin: 0 -15px;
+        padding: 0 15px;
+    }
+    
+    .products-table {
+        min-width: 800px;
+        font-size: 13px;
+    }
+    
+    .products-table th,
+    .products-table td {
+        padding: 8px 6px;
+    }
+    
+    /* Stats */
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .stat-card {
+        padding: 15px;
+    }
+    
+    .stat-value {
+        font-size: 28px;
+    }
+    
+    /* Mapping */
+    .mapping-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    
+    .mapping-field {
+        padding: 12px;
+    }
+    
+    .mapping-info {
+        padding: 12px;
+        font-size: 13px;
+    }
+    
+    /* Modal */
+    .modal-content {
+        width: 95%;
+        max-width: none;
+        padding: 20px;
+        margin: 10px;
+    }
+    
+    .modal-content h2 {
+        font-size: 20px;
+    }
+    
+    /* Progress tracker */
+    #advanced-progress {
+        width: calc(100vw - 20px) !important;
+        left: 10px !important;
+        right: 10px !important;
+        bottom: 10px !important;
+        padding: 15px !important;
+    }
+    
+    .progress-details {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+    
+    .detail-item {
+        font-size: 13px;
+    }
+    
+    /* Notification container */
+    #notification-container {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+        max-width: none;
+    }
+    
+    .notification {
+        min-width: 0;
+        font-size: 13px;
+        padding: 12px 15px;
+    }
+    
+    /* Form elements */
+    input[type="text"],
+    input[type="password"],
+    input[type="email"],
+    select,
+    textarea {
+        font-size: 16px; /* Zapobiega auto-zoom na iOS */
+        padding: 10px;
+    }
+    
+    /* Checkbox/Radio większe dla touch */
+    input[type="checkbox"],
+    input[type="radio"] {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+/* ============================================================================
+   SMALL MOBILE (małe smartfony) - max-width: 480px
+   ============================================================================ */
+
+@media (max-width: 480px) {
+    /* Header */
+    .header {
+        padding: 12px 0;
+    }
+    
+    .company-logo-img {
+        height: 35px !important;
+    }
+    
+    .product-title h1 {
+        font-size: 16px;
+    }
+    
+    .product-title i {
+        font-size: 16px;
+    }
+    
+    .tagline {
+        font-size: 11px;
+    }
+    
+    /* Cards */
+    .card {
+        padding: 12px;
+    }
+    
+    .card-header h2 {
+        font-size: 15px;
+    }
+    
+    /* Table */
+    .products-table {
+        font-size: 12px;
+    }
+    
+    /* Progress details */
+    .progress-details {
+        grid-template-columns: 1fr;
+        gap: 6px;
+    }
+    
+    /* Modal */
+    .modal-content {
+        padding: 15px;
+    }
+    
+    .modal-content h2 {
+        font-size: 18px;
+    }
+    
+    .modal-content p,
+    .modal-content li {
+        font-size: 13px;
+    }
+}
+
+/* ============================================================================
+   TOUCH DEVICES - улучшения dla ekranów dotykowych
+   ============================================================================ */
+
+@media (hover: none) and (pointer: coarse) {
+    /* Większe obszary klikalne */
+    .btn {
+        min-height: 44px;
+        padding: 14px 20px;
+    }
+    
+    .checkbox-col input[type="checkbox"] {
+        width: 24px;
+        height: 24px;
+    }
+    
+    /* Smooth scrolling */
+    * {
+        -webkit-tap-highlight-color: transparent;
+    }
+    
+    /* Scroll snap dla tabel */
+    .products-table-wrapper {
+        scroll-snap-type: x proximity;
+    }
+    
+    /* Disable hover effects */
+    .btn:hover {
+        transform: none;
+    }
+    
+    .card:hover {
+        transform: none;
+    }
+}
+
+/* ============================================================================
+   LANDSCAPE MODE - orientacja pozioma
+   ============================================================================ */
+
+@media (max-width: 768px) and (orientation: landscape) {
+    .header {
+        padding: 10px 0;
+    }
+    
+    .card {
+        margin: 8px 0;
+    }
+    
+    #advanced-progress {
+        max-height: 80vh;
+        overflow-y: auto;
+    }
+}
+
+/* ============================================================================
+   DARK MODE SUPPORT (opcjonalnie)
+   ============================================================================ */
+
+@media (prefers-color-scheme: dark) {
+    /* Dodaj style dark mode jeśli potrzebne */
+}
+
+/* ============================================================================
+   HIGH CONTRAST MODE (accessibility)
+   ============================================================================ */
+
+@media (prefers-contrast: high) {
+    .btn {
+        border: 2px solid currentColor;
+    }
+    
+    .card {
+        border: 2px solid #e5e7eb;
+    }
+}
+
+/* ============================================================================
+   REDUCE MOTION (accessibility dla osób wrażliwych na animacje)
+   ============================================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* ============================================================================
+   PRINT STYLES (dla drukowania)
+   ============================================================================ */
+
+@media print {
+    .header,
+    .btn,
+    #advanced-progress,
+    #notification-container,
+    #save-indicator,
+    .action-buttons {
+        display: none !important;
+    }
+    
+    .card {
+        break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid #e5e7eb;
+    }
+    
+    .products-table {
+        font-size: 10px;
+    }
+}
+
+/* ============================================================================
+   iOS SPECIFIC FIXES
+   ============================================================================ */
+
+@supports (-webkit-touch-callout: none) {
+    /* Fix dla iOS Safari */
+    input[type="text"],
+    input[type="password"],
+    select,
+    textarea {
+        font-size: 16px !important; /* Zapobiega auto-zoom */
+    }
+    
+    /* Fix dla sticky positioning w iOS */
+    .header {
+        position: -webkit-sticky;
+        position: sticky;
+    }
+}
+
+/* ============================================================================
+   ANDROID SPECIFIC FIXES
+   ============================================================================ */
+
+@supports not (-webkit-touch-callout: none) {
+    /* Specyficzne dla Android */
+}
