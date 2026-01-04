@@ -1780,25 +1780,36 @@ async function verifyProductByEAN(ean, sku, productName = '') {
                 const searchQuery = ean || productName || sku;
                 const searchUrl = `https://allegro.pl/listing?string=${encodeURIComponent(searchQuery)}`;
                 
-                console.log(`📡 Pobieram stronę Allegro: ${searchUrl}`);
+                console.log(`📡 Pobieram stronę Allegro przez CORS proxy: ${searchUrl}`);
                 
-                // UWAGA: Musimy użyć zewnętrznego API do obejścia CORS i anti-bot
-                // Użyjemy prostego fetch najpierw (może zadziałać dla demo)
-                // W produkcji należy użyć crawler tool lub proxy
+                // Używamy AllOrigins proxy do obejścia CORS
+                // AllOrigins: darmowy, publiczny CORS proxy
+                const corsProxy = 'https://api.allorigins.win/get?url=';
+                const proxyUrl = corsProxy + encodeURIComponent(searchUrl);
                 
-                const response = await fetch(searchUrl, {
+                console.log(`🔄 Proxy URL: ${proxyUrl}`);
+                
+                const response = await fetch(proxyUrl, {
                     method: 'GET',
                     headers: {
-                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-                        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+                        'Accept': 'application/json'
                     }
                 }).catch(err => {
-                    console.warn('⚠️ Fetch Allegro zablokowany (CORS):', err.message);
+                    console.warn('⚠️ CORS Proxy error:', err.message);
                     return null;
                 });
                 
                 if (response && response.ok) {
-                    const html = await response.text();
+                    // AllOrigins zwraca JSON z polem 'contents' zawierającym HTML
+                    const data = await response.json();
+                    const html = data.contents;
+                    
+                    if (!html) {
+                        console.warn('⚠️ CORS Proxy: brak contentu w odpowiedzi');
+                        throw new Error('Empty response from proxy');
+                    }
+                    
+                    console.log(`✅ Pobrano HTML (${html.length} znaków)`);
                     
                     // Parsuj wyniki przez AllegroScraper
                     const offers = window.allegroScraper.parseAllegroSearch(html, ean, productName);
