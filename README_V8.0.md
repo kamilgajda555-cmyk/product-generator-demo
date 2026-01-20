@@ -54,7 +54,7 @@ Przy pierwszym uruchomieniu pojawi się modal:
 4. Skopiuj klucz (zaczyna się od AIzaSy...)
 5. Wklej do modala i kliknij "Zapisz"
 
-**Masz już klucz?** Możesz użyć: `AIzaSyCQJTrte8dN08hMuclIM62pSZkUahWfzgg`
+
 
 ### KROK 3: Wczytaj CSV
 
