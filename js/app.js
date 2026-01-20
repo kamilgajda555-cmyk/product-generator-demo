@@ -29,7 +29,7 @@ const GEMINI_CONFIG = {
     
     models: {
         QUALITY: [
-            { name: 'gemini-2.5-pro', version: 'v1', timeout: 60000, retries: 2 },
+            { name: 'gemini-3-pro-preview', version: 'v1', timeout: 60000, retries: 2 },
             { name: 'gemini-2.5-flash', version: 'v1', timeout: 30000, retries: 1 }
         ],
         SPEED: [
@@ -37,7 +37,7 @@ const GEMINI_CONFIG = {
             { name: 'gemini-2.0-flash', version: 'v1', timeout: 15000, retries: 1 }
         ],
         BALANCED: [
-            { name: 'gemini-2.5-pro', version: 'v1', timeout: 30000, retries: 1 },
+            { name: 'gemini-3-pro-preview', version: 'v1', timeout: 30000, retries: 1 },
             { name: 'gemini-2.5-flash', version: 'v1', timeout: 20000, retries: 1 },
             { name: 'gemini-2.0-flash', version: 'v1', timeout: 15000, retries: 1 }
         ]
@@ -458,6 +458,11 @@ async function startGeneration() {
         try {
             console.log(`🔄 Generowanie dla: ${product.nazwa}`);
             const description = await generateProductDescription(product, language, style, verifyEAN);
+            
+            // Clamp bullet points to 50 chars
+            if (description.bulletPoints) {
+                description.bulletPoints = clampBulletPointsTo50(description.bulletPoints);
+            }
             
             product.generatedContent = description;
             generatedDescriptions.push({
@@ -2645,6 +2650,39 @@ function stripHtmlTags(html) {
     const tmp = document.createElement('div');
     tmp.innerHTML = html;
     return tmp.textContent || tmp.innerText || '';
+}
+
+/**
+ * Clamp bullet points to 50 characters max (smart truncate on word boundary)
+ * @param {string} bulletPointsHtml - HTML string with <li> tags
+ * @returns {string} - Clamped HTML
+ */
+function clampBulletPointsTo50(bulletPointsHtml) {
+    if (!bulletPointsHtml) return '';
+    
+    // Extract all <li>...</li>
+    const bullets = bulletPointsHtml.match(/<li>(.*?)<\/li>/gi) || [];
+    
+    return bullets.map(bullet => {
+        // Remove <li></li> tags
+        let text = bullet.replace(/<\/?li>/gi, '').trim();
+        
+        // If longer than 50 chars, truncate smartly
+        if (text.length > 50) {
+            text = text.substring(0, 50);
+            const lastSpace = text.lastIndexOf(' ');
+            // Cut at last space if it's not too early (avoid very short bullets)
+            if (lastSpace > 30) {
+                text = text.substring(0, lastSpace).trim();
+            }
+            // Ensure it ends with a period
+            if (!text.endsWith('.')) {
+                text = text.replace(/[,;:]$/, '') + '.';
+            }
+        }
+        
+        return `<li>${text}</li>`;
+    }).join('\n                ');
 }
 
 function sleep(ms) {

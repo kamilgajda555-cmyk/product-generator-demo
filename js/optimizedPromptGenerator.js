@@ -79,25 +79,23 @@ Przykład (153 zn): "Zestaw HT1R232 z 112 elementami CrV. Grzechotki 72T 1/4" i 
 
 ### **3. bulletPoints** (DOKŁADNIE 3 pozycje) - WYMAGANE!
 ⚠️ **TO POLE NIE MOŻE BYĆ PUSTE!**
+⚠️ **KRYTYCZNE: Każdy bullet MAKSYMALNIE 50 ZNAKÓW (licząc tekst bez tagów <li></li>)!**
 
-Format HTML: \`<li>Cecha (max 15 słów)</li>\`
+Format HTML: \`<li>Konkretna cecha.</li>\`
 
-❌ ZABRONIONE cechy SKLEPU:
-- "Szybka dostawa 24h"
-- "Obsługa klienta"
-- "Sprawdzone przez klientów"
-- "Wysoka jakość"
-- "Łatwy zwrot"
+❌ ZABRONIONE:
+- Ogólniki: "Wysoka jakość", "Profesjonalny"
+- Cechy sklepu: "Szybka dostawa 24h", "Łatwy zwrot"
+- Długie zdania >50 znaków
 
-✅ DOZWOLONE cechy PRODUKTU (z danych):
-- Materiał: "222 elementy ze stali CrV"
-- Wymiary: "Walizka 49×40×31 cm"
-- Funkcje: "Grzechotki 72T (1/4\", 3/8\", 1/2\")"
-- Parametry techniczne
+✅ DOZWOLONE (z parametrami technicznymi):
+- "Izolacja 1000 V - bezpieczna praca z prądem." (48 zn)
+- "25 elementów: szczypce, wkrętaki, nasadki." (47 zn)
+- "Stal CrV zwiększa wytrzymałość narzędzi." (43 zn)
 
-**PRZYKŁAD (SKOPIUJ TEN FORMAT):**
+**PRZYKŁAD (każdy <50 znaków):**
 \`\`\`
-<li>222 elementy ze stali chromowo-wanadowej CrV</li><li>Grzechotki 72 zęby (1/4", 3/8", 1/2")</li><li>Walizka z metalowymi zamkami 49×40 cm</li>
+<li>Certyfikat VDE zapewnia bezpieczeństwo pracy.</li><li>Stal stopowa CrV zwiększa wytrzymałość.</li><li>Zestaw 25 elementów do prac elektrycznych.</li>
 \`\`\`
 
 ### **4. longDescription** (${profileConfig.minChars}-${profileConfig.maxChars} zn)
