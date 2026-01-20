@@ -461,10 +461,13 @@ async function startGeneration() {
             
             product.generatedContent = description;
             generatedDescriptions.push({
-                index: product.indeks,
-                name: product.nazwa,
-                ...description
-            });
+               index: product.indeks,
+  name: product.nazwa,
+  seoName: (typeof window.generateSeoTitle === "function")
+    ? window.generateSeoTitle(product, "shop")
+    : "",
+  ...description
+});
             
             updateProductStatus(index, 'completed');
             console.log(`✅ Wygenerowano: ${product.nazwa}`);
@@ -1638,6 +1641,12 @@ function displayGeneratedDescriptions() {
                 <h5>3 Kluczowe Cechy:</h5>
                 <p style="white-space: pre-line;">${escapeHtml(desc.bulletPoints)}</p>
             </div>
+            <div class="content-section">
+    <h4>Nazwa SEO (Shopify):</h4>
+    <div class="meta-content">
+      ${desc.seoName ? desc.seoName : 'Brak danych'}
+    </div>
+</div>
             
             <div class="result-section">
                 <h5>Meta Title:</h5>
@@ -1686,6 +1695,7 @@ function exportToExcel() {
         return {
             'SKU (Indeks)': desc.index || '',
             'Nazwa Produktu': desc.name || '',
+            'Nazwa SEO': desc.seoName || '',
             'EAN': product?.Ean || '',
             'Kategoria': product?.kategoria || '',
             '3 Kluczowe Cechy': desc.bulletPoints || '',
@@ -1726,6 +1736,7 @@ function exportToCSV() {
         return {
             'SKU': desc.index || '',
             'Nazwa': desc.name || '',
+            'Nazwa SEO': desc.seoName || '',
             'EAN': product?.Ean || '',
             'Kategoria': product?.kategoria || '',
             'Bullet Points': desc.bulletPoints || '',
