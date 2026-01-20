@@ -40,14 +40,22 @@
   }
 
   const TYPE_RULES = [
+    // Priority 1: Zestawy (must check first!)
+    { re: /zestaw.*narzędzi|zestaw.*narzedzi|komplet.*narzędzi|komplet.*narzedzi/i, type: "Zestaw narzędzi" },
+    { re: /zestaw.*kluczy|komplet.*kluczy/i, type: "Zestaw kluczy" },
+    { re: /zestaw.*wkrętaków|zestaw.*wkretakow|komplet.*wkrętaków/i, type: "Zestaw wkrętaków" },
+    // Priority 2: Specific tools
+    { re: /ściągacz izolacji|sciagacz izolacji|ściągacz.*kabli|sciagacz.*kabli/i, type: "Ściągacz izolacji" },
+    { re: /naświetlacz|naswietlacz|lampa.*robocza|reflektor/i, type: "Naświetlacz" },
+    // Priority 3: Generic categories
     { re: /(wkrętak|wkretak|śrubokręt|srubokret)/i, type: "Wkrętak" },
-    { re: /(szczypce|kombinerki|obcęgi|obcegi|zaciskarka|ściągacz izolacji|sciagacz izolacji)/i, type: "Szczypce" },
+    { re: /(szczypce|kombinerki|obcęgi|obcegi|zaciskarka)/i, type: "Szczypce" },
     { re: /(klucz.*płaski|klucz.*plaski|klucz.*oczkowy|płasko-oczkowy|plasko-oczkowy|nastawny|imbus|torx)/i, type: "Klucz" },
-    { re: /(nasadka|grzechotka|przedłużk|przedluzk|zestaw nasadek)/i, type: "Nasadki/Grzechotka" },
+    { re: /(nasadka|grzechotka|przedłużk|przedluzk)/i, type: "Nasadki/Grzechotka" },
     { re: /(młotek|mlotek|przecinak|punktak)/i, type: "Młotek/Przecinak" },
     { re: /(taśma miernicza|tasma miernicza|poziomnica|suwmiarka)/i, type: "Narzędzia pomiarowe" },
     { re: /(opaska zaciskowa|wkręty|wkret(y)?|kołki|kolki)/i, type: "Akcesoria montażowe" },
-    { re: /(latarka|czołówka|czolowka|lampa robocza|naświetlacz|naswietlacz)/i, type: "Oświetlenie" },
+    { re: /(latarka|czołówka|czolowka)/i, type: "Oświetlenie" },
     { re: /(rękawice|rekawice)/i, type: "Rękawice robocze" },
     { re: /(okulary|przyłbica|przylbica)/i, type: "Okulary ochronne" },
     { re: /(nauszniki|zatyczki)/i, type: "Ochrona słuchu" },

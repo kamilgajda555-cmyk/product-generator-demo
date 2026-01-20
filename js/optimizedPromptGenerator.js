@@ -64,9 +64,9 @@ Jeśli nie wygenerujesz bulletPoints → JSON będzie ODRZUCONY!
 ## SZCZEGÓŁOWA SPEC
 
 ### **1. metaTitle** (50-60 zn)
-Format: "${mainKeyword} [Cecha] | ${productIndex}" (50-60 zn)
+Format: "Högert – ${mainKeyword} [Cecha] | ${productIndex}" (50-60 zn)
 ⚠️ Skróć jeśli nazwa produktu jest długa!
-Przykład: "Zestaw narzędziowy 222 szt. CrV | HT1R444"
+Przykład: "Högert – Zestaw narzędziowy 222 szt. CrV | HT1R444"
 
 ### **2. metaDescription** (150-157 zn)
 - Keyword: ${mainKeyword}
@@ -117,11 +117,13 @@ Max 20 słów/zdanie
 NIE używaj "...", zakończ kropką
 
 ### **6. seoTags** (8-12 tagów)
-Format: tag1,tag2,tag3,...
+Format: tag1, tag2, tag3, ... (⚠️ UWAGA: spacja po każdym przecinku!)
 1. Nazwa produktu (lowercase)
 2. Nazwa + ${productIndex}
 3. ${productIndex.replace(/[-_]/g, ' ')}
 4-12. Kategoria, materiał, cechy
+
+Przykład: "zestaw narzędzi, zestaw narzędzi ht1e101, ht1e101, narzędzia izolowane, certyfikat vde, stal crv, klucze izolowane"
 
 ---
 
