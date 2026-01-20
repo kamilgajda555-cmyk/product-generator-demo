@@ -29,7 +29,7 @@ const GEMINI_CONFIG = {
     
     models: {
         QUALITY: [
-            { name: 'gemini-3-pro-preview', version: 'v1', timeout: 60000, retries: 2 },
+            { name: 'gemini-2.5-pro', version: 'v1', timeout: 60000, retries: 2 },
             { name: 'gemini-2.5-flash', version: 'v1', timeout: 30000, retries: 1 }
         ],
         SPEED: [
@@ -37,7 +37,7 @@ const GEMINI_CONFIG = {
             { name: 'gemini-2.0-flash', version: 'v1', timeout: 15000, retries: 1 }
         ],
         BALANCED: [
-            { name: 'gemini-3-pro-preview', version: 'v1', timeout: 30000, retries: 1 },
+            { name: 'gemini-2.5-pro', version: 'v1', timeout: 30000, retries: 1 },
             { name: 'gemini-2.5-flash', version: 'v1', timeout: 20000, retries: 1 },
             { name: 'gemini-2.0-flash', version: 'v1', timeout: 15000, retries: 1 }
         ]

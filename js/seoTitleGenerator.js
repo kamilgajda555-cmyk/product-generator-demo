@@ -1,4 +1,4 @@
-Copy/**
+/**
  * SEO Title Generator (Shopify) — Högert naming standard
  */
 (function () {
